@@ -16,10 +16,6 @@ def getAllImages(input=None):
     for data in json_collection:
         images.append(mapper.fromRequestIntoNASACard(data))
 
-    for data in json_collection:
-        images.append(mapper.fromRequestIntoNASACard(data))
-
-
     return images
 
 
