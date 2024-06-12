@@ -12,7 +12,7 @@ def index_page(request):
 
 # auxiliar: retorna 2 listados -> uno de las imágenes de la API y otro de los favoritos del usuario.
 def getAllImagesAndFavouriteList(request):
-    images = []
+    images = services_nasa_image_gallery.getAllImages(request)
     favourite_list = []
 
     return images, favourite_list
@@ -21,7 +21,7 @@ def getAllImagesAndFavouriteList(request):
 def home(request):
     # llama a la función auxiliar getAllImagesAndFavouriteList() y obtiene 2 listados: uno de las imágenes de la API y otro de favoritos por usuario*.
     # (*) este último, solo si se desarrolló el opcional de favoritos; caso contrario, será un listado vacío [].
-    images = []
+    images = services_nasa_image_gallery.getAllImages(request)
     favourite_list = []
     return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list} )
 
@@ -38,20 +38,30 @@ def search(request):
 # las siguientes funciones se utilizan para implementar la sección de favoritos: traer los favoritos de un usuario, guardarlos, eliminarlos y desloguearse de la app.
 @login_required
 def getAllFavouritesByUser(request):
-    favourite_list = []
+    favourite_list = services_nasa_image_gallery.getAllFavouritesByUser(request)
     return render(request, 'favourites.html', {'favourite_list': favourite_list})
 
 
 @login_required
 def saveFavourite(request):
-    pass
-
+    if request.method == 'POST':
+        fav = services_nasa_image_gallery.saveFavourite(request)
+        if fav:
+            return redirect('home')
+        else:
+            return redirect('home')
 
 @login_required
 def deleteFavourite(request):
-    pass
+    if request.method == 'POST':
+        success = services_nasa_image_gallery.deleteFavourite(request)
+        if success:
+            return redirect('favoritos')
+        else:
+            return redirect('favoritos')
 
 
 @login_required
 def exit(request):
-    pass
+    logout(request)
+    return redirect('index-page')
