@@ -14,6 +14,7 @@ def getAllImages(input=None):
     for object in json_response['collection']['items']:
         try:
             if 'links' in object:  # verificar si la clave 'links' está presente en el objeto (sin 'links' NO nos sirve, ya que no mostrará las imágenes).
+                
                 json_collection.append(object)
             else:
                 print("[Capa de transporte --> transport.py]: se encontró un objeto sin clave 'links', omitiendo...")
