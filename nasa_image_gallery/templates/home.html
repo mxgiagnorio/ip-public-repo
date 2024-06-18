@@ -1,42 +1,93 @@
-{% extends 'header.html' %} {% block content %}
+{% extends 'header.html' %}
+{% block content %}
 <main>
-    <h1 class="text-center">Galería de Imágenes de la NASA</h1>
-    <div class="d-flex justify-content-center" style="margin-bottom: 1%">
-        <!-- Buscador del sitio -->
-        <form class="d-flex" action="{% url 'buscar' %}" method="POST">
-            {% csrf_token %}
-            <input class="form-control me-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-        </form>
-    </div>
+  <h1 class="text-center">Galería de Imágenes de la NASA</h1>
+  <div class="d-flex justify-content-center" style="margin-bottom: 1%">
+    <!-- Buscador del sitio -->
+    <form class="d-flex" action="{% url 'buscar' %}" method="GET">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search" />
+      <button class="btn btn-outline-success" type="submit">Buscar</button>
+    </form>
+  </div>
 
+  <!-- Dropdown para seleccionar el número de elementos por página -->
+  <div class="d-flex justify-content-center" style="margin-bottom: 1%">
+    <form method="GET" id="itemsPerPageForm">
+      <input type="hidden" name="query" value="{{ query }}">
+      <label for="itemsPerPage">Imágenes por página:</label>
+      <select name="itemsPerPage" id="items_per_page" onchange="document.getElementById('itemsPerPageForm').submit();">
+        <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
+        <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10</option>
+        <option value="20" {% if items_per_page == 20 %}selected{% endif %}>20</option>
+      </select>
+    </form>
+  </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for imagen in images %}
-        <div class="col">
-            <div class="card">
-                <img src="{{ imagen.image_url}}" class="card-img-top" alt="imagen">
-                <div class="card-body">
-                    <h5 class="card-title">{{ imagen.title}}</h5>
-                    <p class="card-text">{{ imagen.description}}</p>
-                </div>
-                {% if request.user.is_authenticated %}
-                <div class="card-footer text-center">
-                    <form method="post" action="{% url 'agregar-favorito' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="title" value="{{ imagen.title }}">
-                        <input type="hidden" name="description" value="{{ imagen.description }}">
-                        <input type="hidden" name="image_url" value="{{ imagen.image_url }}">
-                        <input type="hidden" name="date" value="{{ imagen.date }}"> {% if imagen in favourite_list %}
-                        <button type="submit" class="btn btn-primary btn-sm float-left" style="color:white" disabled>✔️ Ya está añadida a favoritos</button> {% else %}
-                        <button type="submit" class="btn btn-primary btn-sm float-left" style="color:white">❤️ Añadir a favoritos</button> {% endif %}
-
-                    </form>
-                </div>
-                {% endif %}
-            </div>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for imagen in page_obj %}
+    <div class="col">
+      <div class="card">
+        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" />
+        <div class="card-body">
+          <h5 class="card-title">{{ imagen.title }}</h5>
+          <p class="card-text">{{ imagen.description }}</p>
         </div>
-        {% endfor %}
+        {% if request.user.is_authenticated %}
+        <div class="card-footer text-center">
+          <form method="post" action="{% url 'agregar-favorito' %}">
+            {% csrf_token %}
+            <input type="hidden" name="title" value="{{ imagen.title }}" />
+            <input type="hidden" name="description" value="{{ imagen.description }}" />
+            <input type="hidden" name="image_url" value="{{ imagen.image_url }}" />
+            <input type="hidden" name="date" value="{{ imagen.date }}" />
+            {% if imagen in favourite_list %}
+            <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white" disabled>
+              ✔️ Ya está añadida a favoritos
+            </button>
+            {% else %}
+            <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white">
+              ❤️ Añadir a favoritos
+            </button>
+            {% endif %}
+          </form>
+        </div>
+        {% endif %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
+
+  <!-- Paginación -->
+  <div class="d-flex justify-content-center">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">Primera</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Anterior</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Primera</span></li>
+      <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+      {% endif %}
+
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Última</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+      <li class="page-item disabled"><span class="page-link">Última</span></li>
+      {% endif %}
+    </ul>
+  </div>
 </main>
 {% endblock %}
+
