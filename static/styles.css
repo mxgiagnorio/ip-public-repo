@@ -104,9 +104,9 @@ table.table td i {
 .pagination li a {
   border: none;
   font-size: 95%;
-  width: 30px;
+  width: 76px;
   height: 30px;
-  color: #999;
+  color: #af3333;
   margin: 0 2px;
   line-height: 30px;
   border-radius: 30px !important;
@@ -119,11 +119,11 @@ table.table td i {
 }
 
 .pagination li.active a {
-  background: #03a9f4;
+  background: #2da541;
 }
 
 .pagination li.active a:hover {
-  background: #0397d6;
+  background: #e78d17;
 }
 
 .pagination li.disabled i {
@@ -135,7 +135,7 @@ table.table td i {
   padding-top: 6px;
 }
 
-.hint-text {
+*/ .hint-text {
   float: left;
   margin-top: 6px;
   font-size: 95%;

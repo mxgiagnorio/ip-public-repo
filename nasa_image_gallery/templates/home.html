@@ -58,36 +58,37 @@
     {% endfor %}
   </div>
 
-  <!-- Paginación -->
-  <div class="d-flex justify-content-center">
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">Primera</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Anterior</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-link">Primera</span></li>
-      <li class="page-item disabled"><span class="page-link">Anterior</span></li>
-      {% endif %}
+ 
+<!-- Paginación -->
+<div class="d-flex justify-content-center mt-4">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">1</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}"> < </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">1</span></li>
+    <li class="page-item disabled"><span class="page-link"> < </span></li>
+    {% endif %}
 
-      <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+    <li class="page-item active mx-1"><span class="page-link">{{ page_obj.number }}</span></li>
 
-      {% if page_obj.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.next_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Siguiente</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Última</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
-      <li class="page-item disabled"><span class="page-link">Última</span></li>
-      {% endif %}
-    </ul>
-  </div>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}"> ></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Última</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link"> > </span></li>
+    <li class="page-item disabled"><span class="page-link">Última</span></li>
+    {% endif %}
+  </ul>
+</div>
 </main>
 {% endblock %}
 
