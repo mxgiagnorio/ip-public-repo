@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from .layers.services import services_nasa_image_gallery
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.core.paginator import Paginator
 
 # función que invoca al template del índice de la aplicación.
 def index_page(request):
@@ -21,29 +22,47 @@ def getAllImagesAndFavouriteList(request):
 def home(request):
     # llama a la función auxiliar getAllImagesAndFavouriteList() y obtiene 2 listados: uno de las imágenes de la API y otro de favoritos por usuario*.
     # (*) este último, solo si se desarrolló el opcional de favoritos; caso contrario, será un listado vacío [].
-    images = services_nasa_image_gallery.getAllImages(request)
+    images = services_nasa_image_gallery.getAllImages()
     favourite_list = []
-    return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list} )
+
+# Paginación
+    page_number = request.GET.get("page", 1)
+    items_per_page = request.GET.get("itemsPerPage", 5)
+
+    paginator = Paginator(images, items_per_page)
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'home.html', {'page_obj': page_obj, 'favourite_list': favourite_list, 'items_per_page': items_per_page})
 
 
 # función utilizada en el buscador.
 def search(request):
-    # images, favourite_list = getAllImagesAndFavouriteList(request)
-    images = services_nasa_image_gallery.getImagesBySearchInputLike(request)
-    favourite_list = []
-    search_msg = request.POST.get('query', '')
     
-    search_images = []
-
+    search_msg = request.GET.get('query', '')
+    favourite_list = []
+    
     if search_msg == "":
         return redirect(home)
     else:
-        for image in images:
-            if (
-                search_msg.lower() in image.title.lower()
-                or search_msg.lower() in image.description.lower()
-            ):
-                search_images.append(image)
+      search_images = services_nasa_image_gallery.getAllImages(search_msg)
+
+
+
+             # Paginación
+    page_number = request.GET.get("page", 1)
+    items_per_page = request.GET.get("itemsPerPage", 5)
+
+    paginator = Paginator(search_images, items_per_page)
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "home.html",
+        {"query":search_msg,"page_obj": page_obj, "favourite_list": favourite_list, "items_per_page": items_per_page})
+    
+
+
+    # si el usuario no ingresó texto alguno, debe refrescar la página; caso contrario, debe filtrar aquellas imágenes que posean el texto de búsqueda.
 
     return render(
         request,
