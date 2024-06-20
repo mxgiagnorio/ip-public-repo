@@ -44,12 +44,16 @@ def search(request):
     if search_msg == "":
         return redirect(home)
     else:
-        for image in images:
-            if (
-                search_msg.lower() in image.title.lower()
-                or search_msg.lower() in image.description.lower()
-            ):
-                search_images.append(image)
+      search_images = services_nasa_image_gallery.getAllImages(search_msg)
+
+
+
+    # Paginación
+    page_number = request.GET.get("page", 1)
+    items_per_page = request.GET.get("itemsPerPage", 5)
+
+    paginator = Paginator(search_images, items_per_page)
+    page_obj = paginator.get_page(page_number)
 
     return render(
         request,
@@ -59,7 +63,6 @@ def search(request):
 
 
     # si el usuario no ingresó texto alguno, debe refrescar la página; caso contrario, debe filtrar aquellas imágenes que posean el texto de búsqueda.
-    
 
 
 # las siguientes funciones se utilizan para implementar la sección de favoritos: traer los favoritos de un usuario, guardarlos, eliminarlos y desloguearse de la app.
