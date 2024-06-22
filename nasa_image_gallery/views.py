@@ -6,6 +6,9 @@ from .layers.services import services_nasa_image_gallery
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.core.paginator import Paginator
+from googletrans import Translator
+from langdetect import detect
+
 
 # función que invoca al template del índice de la aplicación.
 def index_page(request):
@@ -37,28 +40,36 @@ def home(request):
 
 # función utilizada en el buscador.
 def search(request):
-    
     search_msg = request.GET.get('query', '')
     favourite_list = []
-    
+
     if search_msg == "":
         return redirect(home)
     else:
-      search_images = services_nasa_image_gallery.getAllImages(search_msg)
+        # Detectar el idioma de la consulta
+        detected_language = detect(search_msg)
+        
+        # Traducir la consulta de búsqueda solo si no está en inglés
+        if detected_language != 'en':
+            translator = Translator()
+            translated_query = translator.translate(search_msg, src='es', dest='en').text
+        else:
+            translated_query = search_msg
 
+        search_images = services_nasa_image_gallery.getAllImages(translated_query)
 
+        # Paginación
+        page_number = request.GET.get("page", 1)
+        items_per_page = request.GET.get("itemsPerPage", 5)
 
-    # Paginación
-    page_number = request.GET.get("page", 1)
-    items_per_page = request.GET.get("itemsPerPage", 5)
+        paginator = Paginator(search_images, items_per_page)
+        page_obj = paginator.get_page(page_number)
 
-    paginator = Paginator(search_images, items_per_page)
-    page_obj = paginator.get_page(page_number)
-
-    return render(
-        request,
-        "home.html",
-        {"query":search_msg,"page_obj": page_obj, "favourite_list": favourite_list, "items_per_page": items_per_page})
+        return render(
+            request,
+            "home.html",
+            {"query": search_msg, "page_obj": page_obj, "favourite_list": favourite_list, "items_per_page": items_per_page}
+        )
     
 
 
