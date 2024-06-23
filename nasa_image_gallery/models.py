@@ -7,6 +7,7 @@ class Favourite(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     image_url = models.TextField()
+    comentario = models.TextField(blank=True, null=True)
     date = models.DateField()
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # asociamos el favorito con el usuario en cuestión.
