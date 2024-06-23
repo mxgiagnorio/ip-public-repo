@@ -6,6 +6,7 @@ from .layers.services import services_nasa_image_gallery
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 # función que invoca al template del índice de la aplicación.
 def index_page(request):
@@ -75,10 +76,13 @@ def getAllFavouritesByUser(request):
 @login_required
 def saveFavourite(request):
     if request.method == 'POST':
-        fav = services_nasa_image_gallery.saveFavourite(request)
+        comentario = request.POST.get('comentario')
+        fav = services_nasa_image_gallery.saveFavourite(request,comentario)
         if fav:
+            messages.success(request, '¡La imagen se ha guardado en favoritos correctamente!')
             return redirect('home')
         else:
+            messages.info(request, '¡La imagen ya está guardada en favoritos!')
             return redirect('home')
 
 @login_required
