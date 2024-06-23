@@ -101,10 +101,10 @@ def deleteFavourite(request):
     if request.method == 'POST':
         success = services_nasa_image_gallery.deleteFavourite(request)
         if success:
+            messages.success(request, '¡Se ha eliminado correctamente!')
             return redirect('favoritos')
         else:
             return redirect('favoritos')
-
 
 @login_required
 def exit(request):
