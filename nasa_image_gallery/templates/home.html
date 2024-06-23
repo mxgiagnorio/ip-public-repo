@@ -1,4 +1,5 @@
 {% extends 'header.html' %}
+
 {% block content %}
 <main>
   <h1 class="text-center">Galería de Imágenes de la NASA</h1>
@@ -24,6 +25,21 @@
     </form>
   </div>
 
+  <!-- Mostrar mensajes flash con SweetAlert2 -->
+  {% if messages %}
+    {% for message in messages %}
+      <script>
+        Swal.fire({
+          icon: "{{ message.tags }}",
+          title: "{{ message.tags }}",
+          text: "{{ message }}",
+          showConfirmButton: false,
+          timer: 3000  // Mostrar por 3 segundos
+        });
+      </script>
+    {% endfor %}
+  {% endif %}
+
   <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for imagen in page_obj %}
     <div class="col">
@@ -35,22 +51,26 @@
         </div>
         {% if request.user.is_authenticated %}
         <div class="card-footer text-center">
-          <form method="post" action="{% url 'agregar-favorito' %}">
-            {% csrf_token %}
-            <input type="hidden" name="title" value="{{ imagen.title }}" />
-            <input type="hidden" name="description" value="{{ imagen.description }}" />
-            <input type="hidden" name="image_url" value="{{ imagen.image_url }}" />
-            <input type="hidden" name="date" value="{{ imagen.date }}" />
-            {% if imagen in favourite_list %}
-            <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white" disabled>
+          {% if imagen in favourite_list %}
+            <button type="button" class="btn btn-primary btn-sm float-left" style="color: white" disabled>
               ✔️ Ya está añadida a favoritos
             </button>
-            {% else %}
-            <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white">
-              ❤️ Añadir a favoritos
-            </button>
-            {% endif %}
-          </form>
+          {% else %}
+            <form method="post" action="{% url 'agregar-favorito' %}">
+              {% csrf_token %}
+              <input type="hidden" name="title" value="{{ imagen.title }}" />
+              <input type="hidden" name="description" value="{{ imagen.description }}" />
+              <input type="hidden" name="image_url" value="{{ imagen.image_url }}" />
+              <input type="hidden" name="date" value="{{ imagen.date }}" />
+              <div class="form-group">
+                <label for="comentario">Comentario</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white">
+                ❤️ Añadir a favoritos
+              </button>
+            </form>
+          {% endif %}
         </div>
         {% endif %}
       </div>
@@ -58,84 +78,35 @@
     {% endfor %}
   </div>
 
+  <!-- Paginación -->
+  <div class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">1</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}"> < </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">1</span></li>
+      <li class="page-item disabled"><span class="page-link"> < </span></li>
+      {% endif %}
 
-<!-- Loading CSS -->
-<style>
-  .loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: 1s all;
-      opacity: 0;
-  }
-  .loading.show {
-      opacity: 1;
-  }
-  .loading .spin {
-      border: 3px solid hsla(185, 100%, 62%, 0.2);
-      border-top-color: #3cefff;
-      border-radius: 50%;
-      width: 3em;
-      height: 3em;
-      animation: spin 1s linear infinite;
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-</style>
+      <li class="page-item active mx-1"><span class="page-link">{{ page_obj.number }}</span></li>
 
-<!-- Loading HTML -->
-<div class="loading show">
-  <div class="spin"></div>
-</div>
-
-<!-- Loading Javascript -->
-<script>
-// Loading
-var Loading=(loadingDelayHidden=0)=>{let loading=null;const myLoadingDelayHidden=loadingDelayHidden;let imgs=[];let lenImgs=0;let counterImgsLoading=0;function incrementCounterImgs(){counterImgsLoading+=1;if(counterImgsLoading===lenImgs){hideLoading()}}function hideLoading(){if(loading!==null){loading.classList.remove('show');setTimeout(function(){loading.remove()},myLoadingDelayHidden)}}function init(){document.addEventListener('DOMContentLoaded',function(){loading=document.querySelector('.loading');imgs=Array.from(document.images);lenImgs=imgs.length;if(imgs.length===0){hideLoading()}else{imgs.forEach(function(img){img.addEventListener('load',incrementCounterImgs,false)})}})}return{'init':init}}
-
-Loading(1000).init();
-</script>
-
-
-<!-- Paginación -->
-<div class="d-flex justify-content-center mt-4">
-  <ul class="pagination">
-    {% if page_obj.has_previous %}
-    <li class="page-item">
-      <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">1</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="?page={{ page_obj.previous_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}"> < </a>
-    </li>
-    {% else %}
-    <li class="page-item disabled"><span class="page-link">1</span></li>
-    <li class="page-item disabled"><span class="page-link"> < </span></li>
-    {% endif %}
-
-    <li class="page-item active mx-1"><span class="page-link">{{ page_obj.number }}</span></li>
-
-    {% if page_obj.has_next %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{ page_obj.next_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}"> ></a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Última</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled"><span class="page-link"> > </span></li>
-    <li class="page-item disabled"><span class="page-link">Última</span></li>
-    {% endif %}
-  </ul>
-</div>
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}&itemsPerPage={{ items_per_page }}&query={{ query }}"> ></a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&itemsPerPage={{ items_per_page }}&query={{ query }}">Última</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link"> > </span></li>
+      <li class="page-item disabled"><span class="page-link">Última</span></li>
+      {% endif %}
+    </ul>
+  </div>
 </main>
 {% endblock %}
