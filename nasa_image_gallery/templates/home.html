@@ -44,17 +44,17 @@
 
   <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for imagen in page_obj %}
-    <div class="col mb-4">
-      <div class="card" style="background-color: #101010; color: white;">
-        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" style="max-height: 300px;">
+    <div class="col">
+      <div class="card">
+        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" />
         <div class="card-body">
-          <h5 class="card-title" style="color: white;">{{ imagen.title }}</h5>
-          <p class="card-text" style="color: white;">{{ imagen.description }}</p>
+          <h5 class="card-title">{{ imagen.title }}</h5>
+          <p class="card-text">{{ imagen.description }}</p>
         </div>
         {% if request.user.is_authenticated %}
-        <div class="card-footer text-center" style="background-color: #101010;">
+        <div class="card-footer text-center">
           {% if imagen in favourite_list %}
-            <button type="button" class="btn btn-primary btn-sm float-left" style="background-color: #2b2b2b; border-color: #2b2b2b; color: white;" disabled>
+            <button type="button" class="btn btn-primary btn-sm float-left" style="color: white" disabled>
               ✔️ Ya está añadida a favoritos
             </button>
           {% else %}
@@ -64,11 +64,11 @@
               <input type="hidden" name="description" value="{{ imagen.description }}" />
               <input type="hidden" name="image_url" value="{{ imagen.image_url }}" />
               <input type="hidden" name="date" value="{{ imagen.date }}" />
-              <div class="form-group" style="background-color: #2b2b2b; padding: 10px; border-radius: 5px;">
-                <label for="comentario" style="color: white;">Comentario</label>
-                <textarea class="form-control" id="comentario" name="comentario" rows="3" style="background-color: #2b2b2b; color: white; border-color: #6c757d;"></textarea>
+              <div class="form-group">
+                <label for="comentario">Comentario</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary btn-sm float-left" style="background-color: #2b2b2b; border-color: #2b2b2b; color: white;">
+              <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white">
                 ❤️ Añadir a favoritos
               </button>
             </form>
@@ -79,92 +79,7 @@
     </div>
     {% endfor %}
   </div>
-  
- <!-- Spinner CSS -->
-<style>
-  .loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #101010;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: 1s all;
-      opacity: 0;
-  }
-  .loading.show {
-      opacity: 1;
-  }
-  .loading .spin {
-      border: 3px solid hsla(185, 100%, 62%, 0.2);
-      border-top-color: #6c757d;
-      border-radius: 50%;
-      width: 3em;
-      height: 3em;
-      animation: spin 1s linear infinite;
-  }
-  @keyframes spin {
-      to {
-          transform: rotate(360deg);
-      }
-  }
-</style>
 
-<!-- Spinner de carga -->
-<div class="loading show">
-  <div class="spin"></div>
-</div>
-
-<!-- Spinner -->
-<script>
-  const Loading = (loadingDelayHidden = 0) => {
-      let loading = null;
-      const myLoadingDelayHidden = loadingDelayHidden;
-      let imgs = [];
-      let lenImgs = 0;
-      let counterImgsLoading = 0;
-
-      const incrementCounterImgs = () => {
-          counterImgsLoading += 1;
-          if (counterImgsLoading === lenImgs) {
-              hideLoading();
-          }
-      };
-
-      const hideLoading = () => {
-          if (loading !== null) {
-              loading.classList.remove('show');
-              setTimeout(() => {
-                  loading.remove();
-              }, myLoadingDelayHidden);
-          }
-      };
-
-      const init = () => {
-          document.addEventListener('DOMContentLoaded', () => {
-              loading = document.querySelector('.loading');
-              imgs = Array.from(document.images);
-              lenImgs = imgs.length;
-              if (imgs.length === 0) {
-                  hideLoading();
-              } else {
-                  imgs.forEach((img) => {
-                      img.addEventListener('load', incrementCounterImgs, false);
-                  });
-              }
-          });
-      };
-
-      return { init };
-  };
-
-  Loading(1000).init();
-</script>
-  
   <!-- Paginación -->
   <div class="d-flex justify-content-center mt-4">
     <ul class="pagination" style="background-color: #2b2b2b; color: #6c757d;">
