@@ -1,14 +1,14 @@
 {% extends 'header.html' %}
 
 {% block content %}
-<main>
+<main style="background-color: #101010; color: white; font-family: Helvetica, Arial, sans-serif;">
   <h1 class="text-center">Galería de Imágenes de la NASA</h1>
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
     <!-- Buscador del sitio -->
     <form class="d-flex" action="{% url 'buscar' %}" method="GET">
       {% csrf_token %}
-      <input class="form-control me-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search" />
-      <button class="btn btn-outline-success" type="submit">Buscar</button>
+      <input class="form-control me-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search" style="background-color: #101010; color: white; border-color: #6c757d;" />
+      <button class="btn btn-outline-success" type="submit" style="color: white; border-color: #6c757d;">Buscar</button>
     </form>
   </div>
 
@@ -17,7 +17,7 @@
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
     <form method="GET" id="itemsPerPageForm">
       <input type="hidden" name="query" value="{{ query }}">
-      <label for="itemsPerPage">Imágenes por página:</label>
+      <label for="itemsPerPage" style="color: #6c757d;">Imágenes por página:</label>
       <select name="itemsPerPage" id="items_per_page" onchange="document.getElementById('itemsPerPageForm').submit();">
         <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
         <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10</option>
@@ -44,17 +44,17 @@
 
   <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for imagen in page_obj %}
-    <div class="col">
-      <div class="card">
-        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" />
+    <div class="col mb-4">
+      <div class="card" style="background-color: #101010; color: white;">
+        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" style="max-height: 300px;">
         <div class="card-body">
-          <h5 class="card-title">{{ imagen.title }}</h5>
-          <p class="card-text">{{ imagen.description }}</p>
+          <h5 class="card-title" style="color: white;">{{ imagen.title }}</h5>
+          <p class="card-text" style="color: white;">{{ imagen.description }}</p>
         </div>
         {% if request.user.is_authenticated %}
-        <div class="card-footer text-center">
+        <div class="card-footer text-center" style="background-color: #101010;">
           {% if imagen in favourite_list %}
-            <button type="button" class="btn btn-primary btn-sm float-left" style="color: white" disabled>
+            <button type="button" class="btn btn-primary btn-sm float-left" style="background-color: #2b2b2b; border-color: #2b2b2b; color: white;" disabled>
               ✔️ Ya está añadida a favoritos
             </button>
           {% else %}
@@ -64,11 +64,11 @@
               <input type="hidden" name="description" value="{{ imagen.description }}" />
               <input type="hidden" name="image_url" value="{{ imagen.image_url }}" />
               <input type="hidden" name="date" value="{{ imagen.date }}" />
-              <div class="form-group">
-                <label for="comentario">Comentario</label>
-                <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+              <div class="form-group" style="background-color: #2b2b2b; padding: 10px; border-radius: 5px;">
+                <label for="comentario" style="color: white;">Comentario</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="3" style="background-color: #2b2b2b; color: white; border-color: #6c757d;"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white">
+              <button type="submit" class="btn btn-primary btn-sm float-left" style="background-color: #2b2b2b; border-color: #2b2b2b; color: white;">
                 ❤️ Añadir a favoritos
               </button>
             </form>
@@ -88,7 +88,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: white;
+      background-color: #101010;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -101,7 +101,7 @@
   }
   .loading .spin {
       border: 3px solid hsla(185, 100%, 62%, 0.2);
-      border-top-color: #3cefff;
+      border-top-color: #6c757d;
       border-radius: 50%;
       width: 3em;
       height: 3em;
@@ -167,7 +167,7 @@
   
   <!-- Paginación -->
   <div class="d-flex justify-content-center mt-4">
-    <ul class="pagination">
+    <ul class="pagination" style="background-color: #2b2b2b; color: #6c757d;">
       {% if page_obj.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">1</a>
@@ -197,3 +197,4 @@
   </div>
 </main>
 {% endblock %}
+

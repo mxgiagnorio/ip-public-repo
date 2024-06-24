@@ -5,45 +5,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi primera aplicación con Django</title>
-    {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %} {% load static %}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        /* Estilos para el header */
+        nav.navbar {
+            background-color: #101010; /* Fondo negro */
+            color: white; /* Texto blanco */
+            font-size: 1.3rem; /* Tamaño de fuente */
+            font-family: 'Helvetica Neue', Arial, sans-serif; /* Fuente Helvetica */
+            transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+        }
+
+        .navbar-brand {
+            color: white; /* Texto blanco para el logo */
+            font-family: 'Founders Grotesk', sans-serif; /* Fuente Founders Grotesk para el logo */
+            font-size: 1.2rem; /* Tamaño de fuente del logo */
+        }
+
+        .navbar-nav .nav-link {
+            color: white; /* Texto blanco para los enlaces */
+            font-size: 1.0rem; /* Tamaño de fuente de los enlaces */
+            transition: color 0.3s ease; /* Transición suave para el color del texto */
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #818181; /* Texto gris claro al pasar el mouse */
+        }
+
+        /* Clase para todos los textos */
+        .fs-5 {
+            font-size: 0.875rem; /* Tamaño de fuente más pequeño */
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Proyecto TP</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+            <a class="navbar-brand fs-5" href="#">Proyecto TP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'index-page' %}">Inicio</a>
+                        <a class="nav-link active fs-5" aria-current="page" href="{% url 'index-page' %}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}"><strong>Galería</strong></a>
+                        <a class="nav-link active fs-5" aria-current="page" href="{% url 'home' %}"><strong>Galería</strong></a>
                     </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'favoritos' %}">Favoritos</a>
+                        <a class="nav-link fs-5" href="{% url 'favoritos' %}">Favoritos</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
                         {% if request.user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'logout' %}">Salir</a> {% else %}
-                        <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a> {% endif %}
+                        <a class="nav-link fs-5" href="{% url 'logout' %}">Salir</a>
+                        {% else %}
+                        <a class="nav-link fs-5" href="{% url 'login' %}">Iniciar sesión</a>
+                        {% endif %}
                     </li>
                 </ul>
-
-
             </div>
         </div>
     </nav>
+
+    {% block content %} 
+
+    {% endblock %}
+
+    {% include "footer.html" %}
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
-    {% block content %} {% endblock %} {% include "footer.html" %}
+</html>
