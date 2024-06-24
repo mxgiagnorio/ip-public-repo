@@ -1,9 +1,58 @@
-{% extends 'header.html' %} {% block content %} {% if request.user.is_authenticated %}
-<h2 class="text-center">Bienvenido {{ user.username | upper }}!</h2>
-{% else %}
-<h2 class="text-center">Bienvenido!</h2>
-{% endif %}
-<p class="text-center">
-    Mirá las imágenes desde <a href="{% url 'home' %}">este link.</a>
-</p>
+{% extends 'header.html' %}
+
+{% block content %}
+<style>
+  .welcome-section {
+    position: relative;
+    background-color: #101010; /* Fondo con color #101010 */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-size: 1.5rem; /* Tamaño de fuente base */
+    font-family: Helvetica, Arial, sans-serif;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .welcome-text {
+    font-weight: bold;
+    font-size: 3rem; /* Tamaño más grande para el texto de bienvenida */
+  }
+
+  .regular-text {
+    font-weight: normal;
+    font-size: 1.2rem; /* Tamaño más grande para el texto regular */
+  }
+
+  .link {
+    color: #878787;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .link:hover {
+    color: white;
+  }
+</style>
+
+<div class="welcome-section">
+  <div class="content">
+    {% if request.user.is_authenticated %}
+    <h2 class="welcome-text">Bienvenido {{ user.username | upper }}!</h2>
+    {% else %}
+    <h2 class="welcome-text">Bienvenido!</h2>
+    {% endif %}
+    <p class="regular-text">
+      Mirá las imágenes desde <a class="link" href="{% url 'home' %}">este link</a>.
+    </p>
+  </div>
+</div>
+
 {% endblock %}
+

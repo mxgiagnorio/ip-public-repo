@@ -1,6 +1,83 @@
 {% extends 'header.html' %}
 
 {% block content %}
+<style>
+  body {
+    background-color: #101010; /* Fondo negro */
+    color: white; /* Texto blanco */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Fuente Helvetica */
+  }
+
+  .text-center {
+    color: white; /* Texto blanco */
+  }
+
+  .form-control, .btn-outline-success, .page-link, .card {
+    background-color: #3A3A3A; /* Fondo gris */
+    color: white; /* Texto blanco */
+  }
+
+  .btn-outline-success:hover {
+    background-color: #4CAF50; /* Fondo verde al pasar el mouse */
+    color: white; /* Texto blanco */
+  }
+
+  .card {
+    background-color: #3A3A3A; /* Fondo gris */
+    color: white; /* Texto blanco */
+  }
+
+  .card-body, .card-footer {
+    background-color: #3A3A3A; /* Fondo gris */
+  }
+
+  .page-item.disabled .page-link, .page-item.active .page-link {
+    background-color: #555555; /* Fondo gris oscuro */
+    color: white; /* Texto blanco */
+  }
+
+  .page-item .page-link {
+    color: white; /* Texto blanco */
+  }
+
+  .page-item .page-link:hover {
+    background-color: #818181; /* Fondo gris claro al pasar el mouse */
+    color: white; /* Texto blanco */
+  }
+
+  .card-img-top {
+    width: 100%; /* Ancho completo */
+    height: 200px; /* Alto fijo */
+    object-fit: cover; /* Ajuste de imagen */
+  }
+
+  .btn-primary {
+    background-color: #007BFF; /* Fondo azul */
+    color: white; /* Texto blanco */
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3; /* Fondo azul oscuro al pasar el mouse */
+    color: white; /* Texto blanco */
+  }
+
+  .form-control {
+    background-color: #3A3A3A; /* Fondo gris */
+    color: white; /* Texto blanco */
+    border: 1px solid #555555; /* Borde gris oscuro */
+  }
+
+  .form-control:focus {
+    background-color: #3A3A3A; /* Fondo gris */
+    color: white; /* Texto blanco */
+    border-color: #4CAF50; /* Borde verde */
+  }
+
+  .form-group label {
+    color: white; /* Texto blanco */
+  }
+</style>
+
 <main>
   <h1 class="text-center">Galería de Imágenes de la NASA</h1>
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
@@ -16,8 +93,8 @@
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
     <form method="GET" id="itemsPerPageForm">
       <input type="hidden" name="query" value="{{ query }}">
-      <label for="itemsPerPage">Imágenes por página:</label>
-      <select name="itemsPerPage" id="items_per_page" onchange="document.getElementById('itemsPerPageForm').submit();">
+      <label for="itemsPerPage" style="color: white;">Imágenes por página:</label>
+      <select name="itemsPerPage" id="items_per_page" class="form-control" style="width: auto;" onchange="document.getElementById('itemsPerPageForm').submit();">
         <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
         <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10</option>
         <option value="20" {% if items_per_page == 20 %}selected{% endif %}>20</option>
