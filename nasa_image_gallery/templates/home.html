@@ -1,100 +1,24 @@
 {% extends 'header.html' %}
 
 {% block content %}
-<style>
-  body {
-    background-color: #101010; /* Fondo negro */
-    color: white; /* Texto blanco */
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* Fuente Helvetica */
-  }
-
-  .text-center {
-    color: white; /* Texto blanco */
-  }
-
-  .form-control, .btn-outline-success, .page-link, .card {
-    background-color: #3A3A3A; /* Fondo gris */
-    color: white; /* Texto blanco */
-  }
-
-  .btn-outline-success:hover {
-    background-color: #4CAF50; /* Fondo verde al pasar el mouse */
-    color: white; /* Texto blanco */
-  }
-
-  .card {
-    background-color: #3A3A3A; /* Fondo gris */
-    color: white; /* Texto blanco */
-  }
-
-  .card-body, .card-footer {
-    background-color: #3A3A3A; /* Fondo gris */
-  }
-
-  .page-item.disabled .page-link, .page-item.active .page-link {
-    background-color: #555555; /* Fondo gris oscuro */
-    color: white; /* Texto blanco */
-  }
-
-  .page-item .page-link {
-    color: white; /* Texto blanco */
-  }
-
-  .page-item .page-link:hover {
-    background-color: #818181; /* Fondo gris claro al pasar el mouse */
-    color: white; /* Texto blanco */
-  }
-
-  .card-img-top {
-    width: 100%; /* Ancho completo */
-    height: 200px; /* Alto fijo */
-    object-fit: cover; /* Ajuste de imagen */
-  }
-
-  .btn-primary {
-    background-color: #007BFF; /* Fondo azul */
-    color: white; /* Texto blanco */
-  }
-
-  .btn-primary:hover {
-    background-color: #0056b3; /* Fondo azul oscuro al pasar el mouse */
-    color: white; /* Texto blanco */
-  }
-
-  .form-control {
-    background-color: #3A3A3A; /* Fondo gris */
-    color: white; /* Texto blanco */
-    border: 1px solid #555555; /* Borde gris oscuro */
-  }
-
-  .form-control:focus {
-    background-color: #3A3A3A; /* Fondo gris */
-    color: white; /* Texto blanco */
-    border-color: #4CAF50; /* Borde verde */
-  }
-
-  .form-group label {
-    color: white; /* Texto blanco */
-  }
-</style>
-
-<main>
+<main style="background-color: #101010; color: white; font-family: Helvetica, Arial, sans-serif;">
   <h1 class="text-center">Galería de Imágenes de la NASA</h1>
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
     <!-- Buscador del sitio -->
     <form class="d-flex" action="{% url 'buscar' %}" method="GET">
       {% csrf_token %}
-      <input class="form-control me-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search" />
-      <button class="btn btn-outline-success" type="submit">Buscar</button>
+      <input class="form-control me-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search" style="background-color: #101010; color: white; border-color: #6c757d;" />
+      <button class="btn btn-outline-success" type="submit" style="color: white; border-color: #6c757d;">Buscar</button>
     </form>
   </div>
 
+  
   <!-- Dropdown para seleccionar el número de elementos por página -->
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
     <form method="GET" id="itemsPerPageForm">
       <input type="hidden" name="query" value="{{ query }}">
-      <label for="itemsPerPage" style="color: white;">Imágenes por página:</label>
-      <select name="itemsPerPage" id="items_per_page" class="form-control" style="width: auto;" onchange="document.getElementById('itemsPerPageForm').submit();">
+      <label for="itemsPerPage" style="color: #6c757d;">Imágenes por página:</label>
+      <select name="itemsPerPage" id="items_per_page" onchange="document.getElementById('itemsPerPageForm').submit();">
         <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
         <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10</option>
         <option value="20" {% if items_per_page == 20 %}selected{% endif %}>20</option>
@@ -102,6 +26,7 @@
     </form>
   </div>
 
+  
   <!-- Mostrar mensajes flash con SweetAlert2 -->
   {% if messages %}
     {% for message in messages %}
@@ -119,17 +44,17 @@
 
   <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for imagen in page_obj %}
-    <div class="col">
-      <div class="card">
-        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" />
+    <div class="col mb-4">
+      <div class="card" style="background-color: #101010; color: white;">
+        <img src="{{ imagen.image_url }}" class="card-img-top" alt="imagen" style="max-height: 300px;">
         <div class="card-body">
-          <h5 class="card-title">{{ imagen.title }}</h5>
-          <p class="card-text">{{ imagen.description }}</p>
+          <h5 class="card-title" style="color: white;">{{ imagen.title }}</h5>
+          <p class="card-text" style="color: white;">{{ imagen.description }}</p>
         </div>
         {% if request.user.is_authenticated %}
-        <div class="card-footer text-center">
+        <div class="card-footer text-center" style="background-color: #101010;">
           {% if imagen in favourite_list %}
-            <button type="button" class="btn btn-primary btn-sm float-left" style="color: white" disabled>
+            <button type="button" class="btn btn-primary btn-sm float-left" style="background-color: #2b2b2b; border-color: #2b2b2b; color: white;" disabled>
               ✔️ Ya está añadida a favoritos
             </button>
           {% else %}
@@ -139,11 +64,11 @@
               <input type="hidden" name="description" value="{{ imagen.description }}" />
               <input type="hidden" name="image_url" value="{{ imagen.image_url }}" />
               <input type="hidden" name="date" value="{{ imagen.date }}" />
-              <div class="form-group">
-                <label for="comentario">Comentario</label>
-                <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+              <div class="form-group" style="background-color: #2b2b2b; padding: 10px; border-radius: 5px;">
+                <label for="comentario" style="color: white;">Comentario</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="3" style="background-color: #2b2b2b; color: white; border-color: #6c757d;"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary btn-sm float-left" style="color: white">
+              <button type="submit" class="btn btn-primary btn-sm float-left" style="background-color: #2b2b2b; border-color: #2b2b2b; color: white;">
                 ❤️ Añadir a favoritos
               </button>
             </form>
@@ -154,10 +79,95 @@
     </div>
     {% endfor %}
   </div>
+  
+ <!-- Spinner CSS -->
+<style>
+  .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #101010;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: 1s all;
+      opacity: 0;
+  }
+  .loading.show {
+      opacity: 1;
+  }
+  .loading .spin {
+      border: 3px solid hsla(185, 100%, 62%, 0.2);
+      border-top-color: #6c757d;
+      border-radius: 50%;
+      width: 3em;
+      height: 3em;
+      animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+      to {
+          transform: rotate(360deg);
+      }
+  }
+</style>
 
+<!-- Spinner de carga -->
+<div class="loading show">
+  <div class="spin"></div>
+</div>
+
+<!-- Spinner -->
+<script>
+  const Loading = (loadingDelayHidden = 0) => {
+      let loading = null;
+      const myLoadingDelayHidden = loadingDelayHidden;
+      let imgs = [];
+      let lenImgs = 0;
+      let counterImgsLoading = 0;
+
+      const incrementCounterImgs = () => {
+          counterImgsLoading += 1;
+          if (counterImgsLoading === lenImgs) {
+              hideLoading();
+          }
+      };
+
+      const hideLoading = () => {
+          if (loading !== null) {
+              loading.classList.remove('show');
+              setTimeout(() => {
+                  loading.remove();
+              }, myLoadingDelayHidden);
+          }
+      };
+
+      const init = () => {
+          document.addEventListener('DOMContentLoaded', () => {
+              loading = document.querySelector('.loading');
+              imgs = Array.from(document.images);
+              lenImgs = imgs.length;
+              if (imgs.length === 0) {
+                  hideLoading();
+              } else {
+                  imgs.forEach((img) => {
+                      img.addEventListener('load', incrementCounterImgs, false);
+                  });
+              }
+          });
+      };
+
+      return { init };
+  };
+
+  Loading(1000).init();
+</script>
+  
   <!-- Paginación -->
   <div class="d-flex justify-content-center mt-4">
-    <ul class="pagination">
+    <ul class="pagination" style="background-color: #2b2b2b; color: #6c757d;">
       {% if page_obj.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page=1&itemsPerPage={{ items_per_page }}&query={{ query }}">1</a>
@@ -187,3 +197,4 @@
   </div>
 </main>
 {% endblock %}
+

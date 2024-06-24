@@ -1,4 +1,21 @@
 {% extends 'header.html' %} {% block content %}
+
+  <!-- Mostrar mensajes flash con SweetAlert2 -->
+  {% if messages %}
+    {% for message in messages %}
+      <script>
+        Swal.fire({
+          icon: "{{ message.tags }}",
+          title: "{{ message.tags }}",
+          text: "{{ message }}",
+          showConfirmButton: false,
+          timer: 3000  // Mostrar por 3 segundos
+        });
+      </script>
+    {% endfor %}
+  {% endif %}
+
+  
 <div class="container-xl">
     <div class="table-responsive">
         <div class="table-wrapper">
