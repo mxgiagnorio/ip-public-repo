@@ -12,6 +12,7 @@
     </form>
   </div>
 
+  
   <!-- Dropdown para seleccionar el número de elementos por página -->
   <div class="d-flex justify-content-center" style="margin-bottom: 1%">
     <form method="GET" id="itemsPerPageForm">
@@ -25,6 +26,7 @@
     </form>
   </div>
 
+  
   <!-- Mostrar mensajes flash con SweetAlert2 -->
   {% if messages %}
     {% for message in messages %}
@@ -77,7 +79,92 @@
     </div>
     {% endfor %}
   </div>
+  
+ <!-- Spinner CSS -->
+<style>
+  .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: 1s all;
+      opacity: 0;
+  }
+  .loading.show {
+      opacity: 1;
+  }
+  .loading .spin {
+      border: 3px solid hsla(185, 100%, 62%, 0.2);
+      border-top-color: #3cefff;
+      border-radius: 50%;
+      width: 3em;
+      height: 3em;
+      animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+      to {
+          transform: rotate(360deg);
+      }
+  }
+</style>
 
+<!-- Spinner de carga -->
+<div class="loading show">
+  <div class="spin"></div>
+</div>
+
+<!-- Spinner -->
+<script>
+  const Loading = (loadingDelayHidden = 0) => {
+      let loading = null;
+      const myLoadingDelayHidden = loadingDelayHidden;
+      let imgs = [];
+      let lenImgs = 0;
+      let counterImgsLoading = 0;
+
+      const incrementCounterImgs = () => {
+          counterImgsLoading += 1;
+          if (counterImgsLoading === lenImgs) {
+              hideLoading();
+          }
+      };
+
+      const hideLoading = () => {
+          if (loading !== null) {
+              loading.classList.remove('show');
+              setTimeout(() => {
+                  loading.remove();
+              }, myLoadingDelayHidden);
+          }
+      };
+
+      const init = () => {
+          document.addEventListener('DOMContentLoaded', () => {
+              loading = document.querySelector('.loading');
+              imgs = Array.from(document.images);
+              lenImgs = imgs.length;
+              if (imgs.length === 0) {
+                  hideLoading();
+              } else {
+                  imgs.forEach((img) => {
+                      img.addEventListener('load', incrementCounterImgs, false);
+                  });
+              }
+          });
+      };
+
+      return { init };
+  };
+
+  Loading(1000).init();
+</script>
+  
   <!-- Paginación -->
   <div class="d-flex justify-content-center mt-4">
     <ul class="pagination">
